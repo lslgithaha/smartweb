@@ -155,4 +155,9 @@ public class UpStatus {
     public void setFilenums(int filenums) {
         this.filenums = filenums;
     }
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }
