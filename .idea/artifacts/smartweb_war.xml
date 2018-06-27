@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="smartweb:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="smartweb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="smartweb:war exploded" />
+    </root>
+  </artifact>
+</component>

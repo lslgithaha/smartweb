@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smart>
+    <!-- 静态资源注册（常见静态资源已经默认注册，若发现静态资源被拦截则在此配置,多个用“,”隔开），示例如下 -->
+    <resource>*.pdf,*.pad,/fileupload_websocket</resource>
+    <!--统一异常处理类，按需写代码，需继承com.lsl.smartweb.aop.ExceptionHandler-->
+    <exception></exception>
+    <!-- 连接池配置,自写持久化层可以使用com.lsl.smartweb.db.DbManage.getConn()从连接池获取连接 -->
+    <database>
+        <!--jdbc驱动-->
+        <diver>com.mysql.cj.jdbc.Driver</diver>
+        <!-- 连接字符串 -->
+        <url>jdbc:mysql://10.100.100.6:3306/test?useUnicode=true&amp;characterEncoding=UTF-8</url>
+        <!--用户名-->
+        <user>root</user>
+        <!--密码-->
+        <password>root</password>
+        <!--连接刷新时间(秒)-->
+        <refreshtime>5*60</refreshtime>
+        <!--最大连接数-->
+        <maxConnection>10</maxConnection>
+        <!--常驻最小连接数-->
+        <minConnection>2</minConnection>
+        <!-- 等待超时时间（秒） -->
+        <overtime>3</overtime>
+        <!-- smartweb连接池刷新连接选择了执行简单sql，减小连接断开然后重新建立的系统资源开销 -->
+        <refreshsql>select version()</refreshsql>
+    </database>
+    <!--访问没有的接口返回数据，字符串格式（${requestUrl}代表访问的接口）-->
+    <InterfaceNotFound>${requestUrl}未定义</InterfaceNotFound>
+    <!--文件上传相关配置-->
+    <file_upload>
+        <!--文件大小超过多少开始使用磁盘缓存(b)-->
+        <usecachesize>1024*1024</usecachesize>
+        <!--单个文件最大体积（b）-->
+        <filemaxsize>-1</filemaxsize>
+        <!--每次上传文件总大小 -1无上限 -->
+        <maxsize>-1</maxsize>
+        <!--缓存目录（若不设置，将使用默认目录），
+        使用SmartFile的write方法会自动缓存文件会删除，若是调用getInputStream方法自己操作流则还需自己调用deleteTemp方法删除临时文件-->
+        <tmpdir>E:</tmpdir>
+    </file_upload>
+</smart>

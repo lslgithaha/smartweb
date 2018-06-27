@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="catalina">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../tomcat-7/lib/catalina.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../tomcat-7/lib/websocket-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
