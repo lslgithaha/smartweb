@@ -1,5 +1,6 @@
 package com.lsl.smartweb.core;
 
+import com.lsl.smartweb.configure.SmartConfig;
 import com.lsl.smartweb.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,11 +61,13 @@ public class ClassUtils {
         Set<Class<?>> clsSet = new HashSet<Class<?>>();
         try {
             Enumeration<URL> urls = getClassLoader().getResources("/");//获得classpath资源路径
+//            Enumeration<URL> urls = getClassLoader().getResources(packageName.replaceAll(",","/"));//获得classpath资源路径
             while(urls.hasMoreElements()){
                 URL url = urls.nextElement();
                 if(url != null){
                     String protocol = url.getProtocol();
                     if(protocol.equals(FILE)){
+//                        String path = url.getPath().replaceAll("%20", " ");
                         String path = url.getPath().replaceAll("%20", " ")+packageName.replace(".","/");
                         addClass(clsSet,path,packageName);
                     }else if(protocol.equals(JAR)){
@@ -78,11 +81,13 @@ public class ClassUtils {
                                     String name = jarEntry.getName();
                                     if(name.endsWith(".class")){
                                         String s = name.substring(0, name.lastIndexOf(".")).replaceAll("/", ".");
+                                        if(SmartConfig.getJatInitBase(s))
                                         clsSet.add(loadClass(s,false));
                                     }
                                 }
                             }
                         }
+
                     }
                 }
 

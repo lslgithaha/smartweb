@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Create by LSL on 2018\6\19 0019
@@ -41,6 +43,7 @@ public class ReadXml {
             databaseInit(rootElement);
             interfaceNotFoundInit(rootElement);
             uploadInit(rootElement);
+            jarNeedLoadBasePacsge(rootElement);
         } catch (JDOMException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -144,5 +147,17 @@ public class ReadXml {
             val *= Integer.valueOf(s);
         }
         return val;
+    }
+    /**
+     * 方法名: ReadXml.uploadInit
+     * 作者: LSL
+     * 创建时间: 10:03 2018\6\27 0027
+     * 描述: 若带有samart注解的类打包jar，需在此添加路径
+     * 参数: [rootElement]
+     * 返回: void
+     */
+    private static void jarNeedLoadBasePacsge(Element rootElement){
+        String jarInitBase = rootElement.getChild("jarInitBase").getText().trim();
+        SmartConfig.setJatInitBase(jarInitBase.split(","));
     }
 }

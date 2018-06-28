@@ -97,7 +97,7 @@ public class UpStatus {
         this.speed = (uploaded-this.uploaded)/(now-this.lastTime+1);//kb/s
         this.lastTime = now;
         this.uploaded = uploaded;
-        Pro_webSocket.send(Util.toJson(this));
+//        Pro_webSocket.send(Util.toJson(this));
     }
 
     public long getTotalSize() {

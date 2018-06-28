@@ -1,15 +1,13 @@
 package com.lsl.smartweb;
 
+import com.lsl.smartweb.annotion.Controller;
 import com.lsl.smartweb.aop.ExceptionHandler;
 import com.lsl.smartweb.aop.core.ControllerHelper;
 import com.lsl.smartweb.aop.core.Handler;
 import com.lsl.smartweb.aop.core.Request;
 import com.lsl.smartweb.configure.ReadXml;
 import com.lsl.smartweb.configure.SmartConfig;
-import com.lsl.smartweb.core.BeanFactory;
-import com.lsl.smartweb.core.BeanHelper;
-import com.lsl.smartweb.core.HelperLoader;
-import com.lsl.smartweb.core.Param;
+import com.lsl.smartweb.core.*;
 import com.lsl.smartweb.fileup.ProcessController;
 import com.lsl.smartweb.fileup.SmartFile;
 import com.lsl.smartweb.fileup.UpStatus;
@@ -39,7 +37,7 @@ import java.util.*;
  * 描述：请求分发器
  * 版本：1.0.0
  */
-@WebServlet(urlPatterns = "/", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/", loadOnStartup = 10)
 public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
     private final static String charset="utf-8";

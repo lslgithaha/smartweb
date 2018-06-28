@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <smart>
     <!-- 静态资源注册（常见静态资源已经默认注册，若发现静态资源被拦截则在此配置,多个用“,”隔开），示例如下 -->
-    <resource>*.pdf,*.pad,/fileupload_websocket</resource>
+    <resource>*.pdf,*.pad</resource>
     <!--统一异常处理类，按需写代码，需继承com.lsl.smartweb.aop.ExceptionHandler-->
     <exception></exception>
     <!-- 连接池配置,自写持久化层可以使用com.lsl.smartweb.db.DbManage.getConn()从连接池获取连接 -->
@@ -41,4 +41,7 @@
         <!--文件上传进度相关的信息（百分比，速度，耗时等等的访问路径）-->
         <progress>/progress</progress>
     </file_upload>
+    <!--若带有smart注解的类被打成jar包，则需要在此添加base路径,多个用“,”隔开-->
+    <!--如果打包成jar的类全路径为com.hah.test.Jarclass,以下4种形式都可以，但是建议越全越好 -->
+    <jarInitBase>com, com.hah, com.hah.test, com.hah.test.Jarclass</jarInitBase>
 </smart>

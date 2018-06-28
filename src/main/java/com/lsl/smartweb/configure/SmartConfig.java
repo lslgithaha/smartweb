@@ -7,6 +7,7 @@ package com.lsl.smartweb.configure;
  */
 public class SmartConfig  {
     private static String[] resource;
+    private static String[] jatInitBase;
     private static String exception;
     private static String interfaceNotFond;
     private static String upload_tempdir;
@@ -14,6 +15,26 @@ public class SmartConfig  {
     private static int upload_maxsize;
     private static int upload_usecachesize;
     private static String progress;
+
+    public static void setResource(String[] resource) {
+        SmartConfig.resource = resource;
+    }
+
+    public static boolean getJatInitBase(String s) {
+        if(s.startsWith("com.lsl.smartweb")){
+            return true;
+        }
+        for (String name:jatInitBase) {
+            if(s.startsWith(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void setJatInitBase(String[] jatInitBase) {
+        SmartConfig.jatInitBase = jatInitBase;
+    }
 
     public static String getProgress() {
         return progress;
