@@ -43,5 +43,6 @@
     </file_upload>
     <!--若带有smart注解的类被打成jar包，则需要在此添加base路径,多个用“,”隔开-->
     <!--如果打包成jar的类全路径为com.hah.test.Jarclass,以下4种形式都可以，但是建议越全越好 -->
-    <jarInitBase>com, com.hah, com.hah.test, com.hah.test.Jarclass</jarInitBase>
+    <!--<jarInitBase>com, com.hah, com.hah.test, com.hah.test.Jarclass</jarInitBase>-->
+    <jarInitBase></jarInitBase>
 </smart>

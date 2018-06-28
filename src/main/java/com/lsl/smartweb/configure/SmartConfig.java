@@ -1,11 +1,13 @@
 package com.lsl.smartweb.configure;
 
+import com.lsl.smartweb.utils.ArrayUtils;
+
 /**
  * Create by LSL on 2018\6\20 0020
  * 描述：
  * 版本：1.0.0
  */
-public class SmartConfig  {
+public class SmartConfig {
     private static String[] resource;
     private static String[] jatInitBase;
     private static String exception;
@@ -21,12 +23,14 @@ public class SmartConfig  {
     }
 
     public static boolean getJatInitBase(String s) {
-        if(s.startsWith("com.lsl.smartweb")){
+        if (s.startsWith("com.lsl.smartweb")) {
             return true;
         }
-        for (String name:jatInitBase) {
-            if(s.startsWith(name)){
-                return true;
+        if (ArrayUtils.isNotEmpty(jatInitBase)) {
+            for (String name : jatInitBase) {
+                if (s.startsWith(name)) {
+                    return true;
+                }
             }
         }
         return false;
