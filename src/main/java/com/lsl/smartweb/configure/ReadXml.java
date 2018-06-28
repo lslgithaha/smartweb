@@ -133,6 +133,8 @@ public class ReadXml {
         if(StringUtils.isNotEmpty(tmpdir)){
             SmartConfig.setUpload_tempdir(tmpdir.trim());
         }
+        String progress = file_upload.getChild("progress")==null?"fileupload_process":file_upload.getChild("progress").getText();
+        SmartConfig.setProgress(progress);
         log.debug("file_upload_int:\\{useCacheSize:{},fileMaxSize:{},maxSize:{},tmpDir:{}\\}",usecachesize,filemaxsize,maxsize,tmpdir);
     }
     private static  int formatIn(String str){

@@ -3,12 +3,14 @@ package com.lsl.smartweb;
 import com.lsl.smartweb.aop.ExceptionHandler;
 import com.lsl.smartweb.aop.core.ControllerHelper;
 import com.lsl.smartweb.aop.core.Handler;
+import com.lsl.smartweb.aop.core.Request;
 import com.lsl.smartweb.configure.ReadXml;
 import com.lsl.smartweb.configure.SmartConfig;
 import com.lsl.smartweb.core.BeanFactory;
 import com.lsl.smartweb.core.BeanHelper;
 import com.lsl.smartweb.core.HelperLoader;
 import com.lsl.smartweb.core.Param;
+import com.lsl.smartweb.fileup.ProcessController;
 import com.lsl.smartweb.fileup.SmartFile;
 import com.lsl.smartweb.fileup.UpStatus;
 import com.lsl.smartweb.fileup.UploadProcessListener;
@@ -86,6 +88,9 @@ public class DispatcherServlet extends HttpServlet {
         upload.setSizeMax(SmartConfig.getUpload_maxsize()); //总文件大小
         upload.setHeaderEncoding(charset);
         log.debug("文件上传工厂初始化完成");
+        //文件上传进度servlet初始化
+        ControllerHelper.changeHandler(new Request("get","/fileupload_process"),new Request("get",SmartConfig.getProgress()) );
+        log.debug("进度信息Controller初始化完成");
         if (StringUtils.isNotEmpty(SmartConfig.getException())) {
             log.debug("初始化异常处理类：{}", SmartConfig.getException());
             try {

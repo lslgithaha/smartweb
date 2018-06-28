@@ -126,4 +126,7 @@ public class DbManage {
             closeConnection();
         }
     }
+    static void closeAll(){
+        connPoolManage.closeAll();
+    }
 }

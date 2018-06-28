@@ -104,4 +104,11 @@ public class Pool {
             log.error("连接创建异常",e);
         }
     }
+    void closeAll(){
+        synchronized (pool){
+            for (int i = 0; i < pool.size(); i++) {
+                delConn(pool.get(i));
+            }
+        }
+    }
 }

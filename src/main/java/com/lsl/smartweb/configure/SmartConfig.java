@@ -13,6 +13,15 @@ public class SmartConfig  {
     private static int upload_filemaxsize;
     private static int upload_maxsize;
     private static int upload_usecachesize;
+    private static String progress;
+
+    public static String getProgress() {
+        return progress;
+    }
+
+    public static void setProgress(String progress) {
+        SmartConfig.progress = progress;
+    }
 
     public static String getUpload_tempdir() {
         return upload_tempdir;

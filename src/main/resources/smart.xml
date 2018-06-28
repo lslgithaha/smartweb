@@ -38,5 +38,7 @@
         <!--缓存目录（若不设置，将使用默认目录），
         使用SmartFile的write方法会自动缓存文件会删除，若是调用getInputStream方法自己操作流则还需自己调用deleteTemp方法删除临时文件-->
         <tmpdir>E:</tmpdir>
+        <!--文件上传进度相关的信息（百分比，速度，耗时等等的访问路径）-->
+        <progress>/progress</progress>
     </file_upload>
 </smart>

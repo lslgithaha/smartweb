@@ -58,4 +58,8 @@ public final class ControllerHelper {
         Request request = new Request(requsetMethod, requestPath);
         return ACTION_MAP.get(request);
     }
+    public static void changeHandler(Request source,Request targe){
+        Handler handler = ACTION_MAP.remove(source);
+        ACTION_MAP.put(targe,handler);
+    }
 }

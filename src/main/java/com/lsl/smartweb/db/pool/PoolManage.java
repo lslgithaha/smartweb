@@ -63,7 +63,9 @@ public class PoolManage extends Thread{
     public void closeConnection(Connection connection) {
         pool.set(connection);
     }
-
+    public void closeAll(){
+        pool.closeAll();
+    }
 
     public static void setRefreshsql(String refreshsql) {
         PoolManage.refreshsql = refreshsql;
