@@ -13,4 +13,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Controller {
+    /**
+     * 方法名: Action.value
+     * 作者: LSL
+     * 创建时间: 17:30 2018\5\8 0008
+     * 描述: 请求类型与路径
+     * 参数: []
+     * 返回: java.lang.String
+     */
+    String value() default "";
 }

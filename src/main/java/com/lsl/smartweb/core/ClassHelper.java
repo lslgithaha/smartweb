@@ -1,10 +1,13 @@
 package com.lsl.smartweb.core;
 
 import com.lsl.smartweb.annotion.*;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Create by LSL on 2018\5\8 0008
@@ -82,7 +85,8 @@ public final class ClassHelper {
      * 返回: java.util.Set<java.lang.Class<?>>
      */
     public static Set<Class<?>> getBeanClassSet(){
-        Set<Class<?>> set = ClassUtils.getClassSet("com.lsl.smartweb.annotion");
+        Set<Class<?>> set =
+        CLASS_SET.parallelStream().filter(e->e.getName().startsWith("com.lsl.smartweb.annotion")).collect(Collectors.toSet());
         Set<Class<?>> classSet = new HashSet<Class<?>>();
         for (Class<?> aClass : set) {
             classSet.addAll(getClsSet(aClass));

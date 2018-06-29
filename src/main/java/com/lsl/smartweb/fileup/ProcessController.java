@@ -17,8 +17,8 @@ public class ProcessController {
     private static final Map<String,UpStatus> STATUS_MAP = new HashMap<>();
     @GET("/fileupload_process")
     public UpStatus getProccess(HttpSession session){
-        System.out.println(session.getId());
-        System.out.println(STATUS_MAP.get(session.getId()));
+//        System.out.println(session.getId());
+//        System.out.println(STATUS_MAP.get(session.getId()));
         return STATUS_MAP.get(session.getId());
     }
 

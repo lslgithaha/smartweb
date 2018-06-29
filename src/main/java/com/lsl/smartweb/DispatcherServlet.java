@@ -15,6 +15,7 @@ import com.lsl.smartweb.fileup.UploadProcessListener;
 import com.lsl.smartweb.utils.ArrayUtils;
 import com.lsl.smartweb.utils.StringUtils;
 import com.lsl.smartweb.utils.Util;
+import com.lsl.smartweb.view.ReturnUtls;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -43,7 +44,6 @@ public class DispatcherServlet extends HttpServlet {
     private final static String charset="utf-8";
     private ExceptionHandler exceptionHandler;
     private DiskFileItemFactory fac;
-    private ServletFileUpload upload;
 
     /**
      * 方法名: DispatcherServlet.init
@@ -81,10 +81,7 @@ public class DispatcherServlet extends HttpServlet {
         if(StringUtils.isNotEmpty(SmartConfig.getUpload_tempdir())){
             fac.setRepository(new File(SmartConfig.getUpload_tempdir()));
         }
-        upload = new ServletFileUpload(fac);//2.创建文件上传核心类对象
-        upload.setFileSizeMax(SmartConfig.getUpload_filemaxsize());//单个文件大小
-        upload.setSizeMax(SmartConfig.getUpload_maxsize()); //总文件大小
-        upload.setHeaderEncoding(charset);
+
         log.debug("文件上传工厂初始化完成");
         //文件上传进度servlet初始化
         ControllerHelper.changeHandler(new Request("get","/fileupload_process"),new Request("get",SmartConfig.getProgress()) );
@@ -205,18 +202,7 @@ public class DispatcherServlet extends HttpServlet {
      */
     private void returnDual(Object o, HttpServletResponse response, HttpServletRequest request){
         if (null != o) {
-            try {
-                //处理返回值
-                response.setContentType("application/json");
-                response.setCharacterEncoding(charset);
-                PrintWriter writer = response.getWriter();
-                String s = Util.toJson(o);
-                writer.write(s);
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ReturnUtls.dual(o, response, request,charset);
         }
     }
     /**
@@ -230,6 +216,10 @@ public class DispatcherServlet extends HttpServlet {
     private HashMap<String, Object> dualFile(HttpServletRequest request) throws IOException, FileUploadException {
         HashMap<String, Object> parmap = new HashMap<String, Object>();
         UpStatus upStatus = new UpStatus();
+        ServletFileUpload upload = new ServletFileUpload(fac);//2.创建文件上传核心类对象
+        upload.setFileSizeMax(SmartConfig.getUpload_filemaxsize());//单个文件大小
+        upload.setSizeMax(SmartConfig.getUpload_maxsize()); //总文件大小
+        upload.setHeaderEncoding(charset);
         upload.setProgressListener(new UploadProcessListener(upStatus,request.getSession().getId()));
         try {
             List<FileItem>  items = upload.parseRequest(request);// 1. 得到 FileItem 的集合 items

@@ -12,7 +12,7 @@ import com.lsl.smartweb.db.DbManage;
  */
 public final class HelperLoader {
     public static void init(){
-        Class<?>[] classList = {ClassHelper.class,BeanHelper.class,AopHelper.class, InterHelper.class,ControllerHelper.class/*, DbManage.class*/};
+        Class<?>[] classList = {ClassHelper.class,BeanHelper.class,AopHelper.class, InterHelper.class,ControllerHelper.class, DbManage.class};
         for (Class<?> cls : classList) {
             ClassUtils.loadClass(cls.getName(),true);
         }

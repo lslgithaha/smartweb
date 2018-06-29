@@ -2,11 +2,13 @@ package com.lsl.smartweb.core;
 
 import com.lsl.smartweb.configure.SmartConfig;
 import com.lsl.smartweb.utils.StringUtils;
+import com.lsl.smartweb.view.ReturnUtls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -60,10 +62,11 @@ public class ClassUtils {
     public static Set<Class<?>> getClassSet(String packageName){
         Set<Class<?>> clsSet = new HashSet<Class<?>>();
         try {
-            Enumeration<URL> urls = getClassLoader().getResources("/");//获得classpath资源路径
+            Enumeration<URL> urls = getClassLoader().getResources("");//获得classpath资源路径
 //            Enumeration<URL> urls = getClassLoader().getResources(packageName.replaceAll(",","/"));//获得classpath资源路径
             while(urls.hasMoreElements()){
                 URL url = urls.nextElement();
+                System.out.println(url.toString());
                 if(url != null){
                     String protocol = url.getProtocol();
                     if(protocol.equals(FILE)){
@@ -83,6 +86,9 @@ public class ClassUtils {
                                         String s = name.substring(0, name.lastIndexOf(".")).replaceAll("/", ".");
                                         if(SmartConfig.getJatInitBase(s))
                                         clsSet.add(loadClass(s,false));
+                                    }else if(name.endsWith("FileContentType.txt")){
+                                        InputStream inputStream = jarFile.getInputStream(jarEntry);
+                                        ReturnUtls.init(inputStream);
                                     }
                                 }
                             }
@@ -108,11 +114,7 @@ public class ClassUtils {
      * 返回: void
      */
     public static void addClass(Set<Class<?>> clsSet, String path, final String packageName){
-        final File[] files = new File(path).listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return (pathname.isFile() && pathname.getName().endsWith(".class"))||pathname.isDirectory();
-            }
-        });
+        final File[] files = new File(path).listFiles(pathname -> (pathname.isFile() && pathname.getName().endsWith(".class"))||pathname.isDirectory());
         for (File file:files) {
             if (file.isFile()) {
                 String filename = file.getName();
