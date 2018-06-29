@@ -45,6 +45,7 @@ public class ReadXml {
             interfaceNotFoundInit(rootElement);
             uploadInit(rootElement);
             jarNeedLoadBasePacsge(rootElement);
+            transactionInit(rootElement);
         } catch (JDOMException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -169,5 +170,26 @@ public class ReadXml {
         if (StringUtils.isNotEmpty(jarInitBase)) {
             SmartConfig.setJatInitBase(jarInitBase.split(","));
         }
+    }
+    /**
+     * 方法名: ReadXml.uploadInit
+     * 作者: LSL
+     * 创建时间: 10:03 2018\6\27 0027
+     * 描述: 声明式事务正则
+     * 参数: [rootElement]
+     * 返回: void
+     */
+    private static void transactionInit(Element rootElement) {
+        Element transaction = rootElement.getChild("transaction");
+        if(transaction == null){
+            SmartConfig.setTransaction("ee12b625ec0e41489dd66ae5b9c67366");
+            return;
+        }
+        String text = transaction.getText();
+        if(!StringUtils.isNotEmpty(text)){
+            SmartConfig.setTransaction("ee12b625ec0e41489dd66ae5b9c67366");
+            return;
+        }
+        SmartConfig.setTransaction(text);
     }
 }

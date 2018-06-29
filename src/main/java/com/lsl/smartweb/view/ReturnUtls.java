@@ -16,47 +16,44 @@ import java.util.concurrent.ConcurrentHashMap;
  * 版本：1.0.0
  */
 public class ReturnUtls {
-    private static final String FILE="file:";
-    private static final String REDIRECT="redirect:";
-    private static final String FORWARD="file:";
-    private static final String DOWNLOAD="download:";
-    private static final Map<String,String> contenMap=new ConcurrentHashMap<>();
+    private static final String REDIRECT = "redirect:";
+    private static final String FORWARD = "forward:";
+    private static final String FILE = "file:";
+    private static final Map<String, String> contenMap = new ConcurrentHashMap<>();
 
-    public static void  dual(Object o, HttpServletResponse response, HttpServletRequest request,String charset){
+    public static void dual(Object o, HttpServletResponse response, HttpServletRequest request, String charset) {
         response.setCharacterEncoding(charset);
         try {
-            if(o instanceof String){
+            if (o instanceof String) {
                 String s = (String) o;
-                if(s.startsWith(FILE)){
-                    String filepath = s.replaceFirst(FILE, "");
-                    fileDual(response,filepath,false,null);
-                }else if(s.startsWith(DOWNLOAD)){
-                    String url = s.replaceFirst(DOWNLOAD, "");
+                if (s.startsWith(FILE)) {
+                    String url = s.replaceFirst(FILE, "");
                     String[] split = url.split(",filename=");
-                    if(split.length==1){
-                        fileDual(response,split[0],true,null);
-                    }else{
-                        fileDual(response,split[0],true,split[1]);
+                    if (split.length == 1) {
+                        fileDual(response, split[0], null);
+                    } else {
+                        fileDual(response, split[0], split[1]);
                     }
-                }else if(s.startsWith(REDIRECT)){
+                } else if (s.startsWith(REDIRECT)) {
                     String url = s.replaceFirst(REDIRECT, "");
-                    redictDual(response,url);
-                }else if(s.startsWith(FORWARD)){
+                    redictDual(response, url);
+                } else if (s.startsWith(FORWARD)) {
                     String url = s.replaceFirst(FORWARD, "");
-                    forwardDual(request,response,url);
-                }else {
-                    textDual(response,s);
+                    forwardDual(request, response, url);
+                } else {
+                    textDual(response, s);
                 }
-            }else if(o instanceof SmartInputStrem){
+            } else if (o instanceof SmartInputStrem) {
                 SmartInputStrem sim = (SmartInputStrem) o;
-                inputStremDual(response,sim.getInputStream(),sim.isDownload(),sim.getFilename());
-            }else {
-                jsonDual(response,o);
+                inputStremDual(response, sim.getInputStream() ,sim.getFilename());
+            } else {
+                jsonDual(response, o);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 方法名: ReturnUtls.fileDual
      * 作者: LSL
@@ -65,42 +62,42 @@ public class ReturnUtls {
      * 参数: []
      * 返回: void
      */
-    private static void fileDual(HttpServletResponse response,String filepath,boolean isDownLoad,String filename) throws IOException {
+    private static void fileDual(HttpServletResponse response, String filepath, String filename) throws IOException {
         File file = new File(filepath);
-        if(filename==null){
+        if (filename == null) {
             filename = file.getName();
         }
-        if(file.exists()){
+        if (file.exists()) {
             InputStream inputStream = new FileInputStream(file);
-            inputStremDual(response,inputStream,isDownLoad,filename);
-        }else{
-            textDual(response,"文件丢失");
+            inputStremDual(response, inputStream, filename);
+        } else {
+            textDual(response, "文件丢失:" + filepath);
         }
     }
+
     /**
      * 方法名: ReturnUtls.inputStremDual
      * 作者: LSL
      * 创建时间: 17:33 2018\6\29 0029
      * 描述: 数据输入流处理
-     * 参数: [response, in, isDownLoad, filename]
+     * 参数: [response, in, isView, filename]
      * 返回: void
      */
-    private static void inputStremDual(HttpServletResponse response,InputStream inputStream,boolean isDownLoad,String filename) throws IOException {
+    private static void inputStremDual(HttpServletResponse response, InputStream inputStream, String filename) throws IOException {
         String s = filename.substring(filename.lastIndexOf("."));
-        response.setContentType(contenMap.containsKey(s)?contenMap.get(s):"application/octet-stream");
         OutputStream out = response.getOutputStream();
-        if(isDownLoad){
-            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(filename, "UTF-8"));
-        }
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
+        response.setContentType(contenMap.containsKey(s) ? contenMap.get(s) : "application/octet-stream");
         byte[] buff = new byte[1024];
         int len = -1;
-        while ((len=inputStream.read(buff))!=-1){
-            out.write(buff,0,len);
+        while ((len = inputStream.read(buff)) != -1) {
+            out.write(buff, 0, len);
         }
         inputStream.close();
         out.flush();
         out.close();
     }
+
     /**
      * 方法名: ReturnUtls.redictDual
      * 作者: LSL
@@ -109,9 +106,10 @@ public class ReturnUtls {
      * 参数: [response, url]
      * 返回: void
      */
-    private static void redictDual(HttpServletResponse response,String url) throws IOException {
+    private static void redictDual(HttpServletResponse response, String url) throws IOException {
         response.sendRedirect(url);
     }
+
     /**
      * 方法名: ReturnUtls.forwardDual
      * 作者: LSL
@@ -120,9 +118,10 @@ public class ReturnUtls {
      * 参数: [request, url]
      * 返回: void
      */
-    private static void forwardDual(HttpServletRequest request,HttpServletResponse response,String url) throws ServletException, IOException {
-        request.getRequestDispatcher(url).forward(request,response);
+    private static void forwardDual(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
+        request.getRequestDispatcher(url).forward(request, response);
     }
+
     /**
      * 方法名: ReturnUtls.jsonDual
      * 作者: LSL
@@ -131,7 +130,7 @@ public class ReturnUtls {
      * 参数: [response, obj]
      * 返回: void
      */
-    private static void jsonDual(HttpServletResponse response,Object obj) throws IOException {
+    private static void jsonDual(HttpServletResponse response, Object obj) throws IOException {
         //处理返回值
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -140,6 +139,7 @@ public class ReturnUtls {
         writer.flush();
         writer.close();
     }
+
     /**
      * 方法名: ReturnUtls.jsonDual
      * 作者: LSL
@@ -148,7 +148,7 @@ public class ReturnUtls {
      * 参数: [response, obj]
      * 返回: void
      */
-    private static void textDual(HttpServletResponse response,String s) throws IOException {
+    private static void textDual(HttpServletResponse response, String s) throws IOException {
         //处理返回值
         response.setContentType("text/plain");
         PrintWriter writer = response.getWriter();
@@ -157,17 +157,17 @@ public class ReturnUtls {
         writer.close();
     }
 
-    public static void init(InputStream in){
+    public static void init(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line = "";
         try {
             while ((line = reader.readLine()) != null) {
-                String[] ys = line.split("Y$Y");
-                if(ys!=null&&ys.length==2){
-                    contenMap.put(ys[0],ys[1]);
+                String[] ys = line.split("=");
+                if (ys != null && ys.length == 2) {
+                    contenMap.put(ys[0], ys[1]);
                 }
             }
-            System.out.println("FileContentType__init__success");
+            System.out.println("FileContentType__init__success：" + contenMap.size());
         } catch (IOException e) {
             System.out.println("FileContentType__init__false");
             throw new RuntimeException(e);

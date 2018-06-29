@@ -17,6 +17,15 @@ public class SmartConfig {
     private static int upload_maxsize;
     private static int upload_usecachesize;
     private static String progress;
+    private static String transaction;
+
+    public static String getTransaction() {
+        return transaction;
+    }
+
+    public static void setTransaction(String transaction) {
+        SmartConfig.transaction = transaction;
+    }
 
     public static void setResource(String[] resource) {
         SmartConfig.resource = resource;

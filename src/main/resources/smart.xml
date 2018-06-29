@@ -4,6 +4,8 @@
     <resource>*.pdf,*.pad</resource>
     <!--统一异常处理类，按需写代码，需继承com.lsl.smartweb.aop.ExceptionHandler-->
     <exception></exception>
+    <!--申明式事务配置 方法名匹配正则表达式-->
+    <transaction>^[\w]*Save$</transaction>
     <!-- 连接池配置,自写持久化层可以使用com.lsl.smartweb.db.DbManage.getConn()从连接池获取连接 -->
     <database>
         <!--jdbc驱动-->

@@ -3,10 +3,13 @@ package com.lsl.smartweb.db;
 import com.lsl.smartweb.annotion.Transaction;
 import com.lsl.smartweb.aop.core.Proxy;
 import com.lsl.smartweb.aop.proxy.ProxyChain;
+import com.lsl.smartweb.configure.SmartConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Create by LSL on 2018\5\25 0025
@@ -20,12 +23,16 @@ public class TransactionProxy implements Proxy {
           return false;
       }
     };
+    private static final Pattern pattern = Pattern.compile(SmartConfig.getTransaction());
     @Override
     public Object doProxy(ProxyChain proxyChain) throws Throwable {
         Object object;
         boolean flag = FLAG_HOLDER.get();
         Method targetMethod = proxyChain.getTargetMethod();
-        if(!flag && targetMethod.isAnnotationPresent(Transaction.class)){
+        String name = targetMethod.getName();
+        Matcher matcher = pattern.matcher(name);
+        boolean rs = matcher.matches();
+        if(!flag && (targetMethod.isAnnotationPresent(Transaction.class))||rs){
             FLAG_HOLDER.set(true);
             try {
                 DbManage.beginTransaction();
@@ -45,6 +52,7 @@ public class TransactionProxy implements Proxy {
             }
         }else{
             object = proxyChain.doProxyChain();
+            DbManage.closeConnection();
         }
         return object;
     }
