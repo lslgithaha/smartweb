@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -63,10 +62,9 @@ public class ClassUtils {
         Set<Class<?>> clsSet = new HashSet<Class<?>>();
         try {
             Enumeration<URL> urls = getClassLoader().getResources("");//获得classpath资源路径
-//            Enumeration<URL> urls = getClassLoader().getResources(packageName.replaceAll(",","/"));//获得classpath资源路径
+//            Enumeration<URL> urls = getClassLoader().getResources("");//获得classpath资源路径
             while(urls.hasMoreElements()){
                 URL url = urls.nextElement();
-                System.out.println(url.toString());
                 if(url != null){
                     String protocol = url.getProtocol();
                     if(protocol.equals(FILE)){
@@ -102,7 +100,7 @@ public class ClassUtils {
             log.error("load class false,msg:"+e.getMessage());
             throw new RuntimeException(e);
         }
-            return clsSet;
+        return clsSet;
     }
 
     /**

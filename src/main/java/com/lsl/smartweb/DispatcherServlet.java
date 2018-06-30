@@ -109,7 +109,7 @@ public class DispatcherServlet extends HttpServlet {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         String requestMethod = request.getMethod().toLowerCase();
-        String requestPath = request.getRequestURI();
+        String requestPath = request.getServletPath();
         Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
         if (handler != null) {
             log.debug("来访路径：{},绑定方法：{}.{}()", requestPath, handler.getContriller().getName(), handler.getMethod().getName());
