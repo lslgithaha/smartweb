@@ -8,6 +8,8 @@
     <transaction>^[\w]*Save$</transaction>
     <!-- 连接池配置,自写持久化层可以使用com.lsl.smartweb.db.DbManage.getConn()从连接池获取连接 -->
     <database>
+        <!--是否启用数据库连接池-->
+        <useful>true</useful>
         <!--jdbc驱动-->
         <diver>com.mysql.cj.jdbc.Driver</diver>
         <!-- 连接字符串 -->

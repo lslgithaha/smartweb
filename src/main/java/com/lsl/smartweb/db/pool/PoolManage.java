@@ -20,11 +20,19 @@ public class PoolManage extends Thread{
     static int connectCount = 0;
     static int maxConnect = 0;
     static int overtime = 0;
+    static boolean init = false;
     public PoolManage(){
-        pool = new Pool(overtime,minConnect,connectCount,maxConnect);
-        pool.init();
-        this.start();
+        if(init) {
+            pool = new Pool(overtime, minConnect, connectCount, maxConnect);
+            pool.init();
+            this.start();
+        }
     }
+
+    public static void setInit(boolean init) {
+        PoolManage.init = init;
+    }
+
     @Override
     public void run() {
         //连接刷新线程

@@ -1,6 +1,5 @@
 package com.lsl.smartweb;
 
-import com.lsl.smartweb.annotion.Controller;
 import com.lsl.smartweb.aop.ExceptionHandler;
 import com.lsl.smartweb.aop.core.ControllerHelper;
 import com.lsl.smartweb.aop.core.Handler;
@@ -8,7 +7,6 @@ import com.lsl.smartweb.aop.core.Request;
 import com.lsl.smartweb.configure.ReadXml;
 import com.lsl.smartweb.configure.SmartConfig;
 import com.lsl.smartweb.core.*;
-import com.lsl.smartweb.fileup.ProcessController;
 import com.lsl.smartweb.fileup.SmartFile;
 import com.lsl.smartweb.fileup.UpStatus;
 import com.lsl.smartweb.fileup.UploadProcessListener;

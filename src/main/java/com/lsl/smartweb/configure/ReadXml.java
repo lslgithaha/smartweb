@@ -83,30 +83,35 @@ public class ReadXml {
     private static void databaseInit(Element rootElement) {
         Element database = rootElement.getChild("database");
         if (database == null) {
-            log.debug("没有配置默认db，采用引入的db");
+            log.debug("没有配置默认db");
             return;
         }
-        String diver = database.getChild("diver").getText();
-        String url = database.getChild("url").getText();
-        String user = database.getChild("user").getText().trim();
-        String password = database.getChild("password").getText().trim();
-        ConectFactory.setDriver(diver);
-        ConectFactory.setUrl(url);
-        ConectFactory.setUser(user);
-        ConectFactory.setPassword(password);
-        log.info("数据库连接池相关信息：url:{},user:{},diver:{},password:{}", url, user, diver, password);
-        String refreshtime = database.getChild("refreshtime").getText().trim();
-        int time = formatIn(refreshtime);
-        PoolManage.setRefreshTime(time * 1000);
-        String maxConnection = database.getChild("maxConnection").getText().trim();
-        PoolManage.setMaxConnect(Integer.valueOf(maxConnection));
-        String minConnection = database.getChild("minConnection").getText().trim();
-        PoolManage.setMinConnect(Integer.valueOf(minConnection));
-        String overtime = database.getChild("overtime").getText().trim();
-        PoolManage.setOvertime(Integer.valueOf(overtime) * 1000);
-        String refreshsql = database.getChild("refreshsql").getText();
-        PoolManage.setRefreshsql(refreshsql);
-        log.info("连接池相关信息->刷新时间（秒）：{},最大连接数：{},最小连接数：{},连接超时（秒）:{},刷新连接用的sql：{}", time, maxConnection, minConnection, overtime, refreshsql);
+        String useful = database.getChild("useful").getText();
+        boolean use = Boolean.valueOf(useful);
+        PoolManage.setInit(use);
+        if(use){
+            String diver = database.getChild("diver").getText();
+            String url = database.getChild("url").getText();
+            String user = database.getChild("user").getText().trim();
+            String password = database.getChild("password").getText().trim();
+            ConectFactory.setDriver(diver);
+            ConectFactory.setUrl(url);
+            ConectFactory.setUser(user);
+            ConectFactory.setPassword(password);
+            log.info("数据库连接池相关信息：url:{},user:{},diver:{},password:{}", url, user, diver, password);
+            String refreshtime = database.getChild("refreshtime").getText().trim();
+            int time = formatIn(refreshtime);
+            PoolManage.setRefreshTime(time * 1000);
+            String maxConnection = database.getChild("maxConnection").getText().trim();
+            PoolManage.setMaxConnect(Integer.valueOf(maxConnection));
+            String minConnection = database.getChild("minConnection").getText().trim();
+            PoolManage.setMinConnect(Integer.valueOf(minConnection));
+            String overtime = database.getChild("overtime").getText().trim();
+            PoolManage.setOvertime(Integer.valueOf(overtime) * 1000);
+            String refreshsql = database.getChild("refreshsql").getText();
+            PoolManage.setRefreshsql(refreshsql);
+            log.info("连接池相关信息->刷新时间（秒）：{},最大连接数：{},最小连接数：{},连接超时（秒）:{},刷新连接用的sql：{}", time, maxConnection, minConnection, overtime, refreshsql);
+        }
     }
 
     /**
