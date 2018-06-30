@@ -166,7 +166,7 @@ public final class BeanFactory {
                 result = method.invoke(o, list.toArray());
             }
         } catch (Exception e) {
-            log.error("invoke method {} false,msg:{}",method.getName(),e.getMessage());
+            log.error("invoke method {} false,msg:",method.getName(),e);
             throw e;
         }
         return result;
@@ -184,7 +184,7 @@ public final class BeanFactory {
             field.setAccessible(true);
             field.set(o,v);
         } catch (IllegalAccessException e) {
-            log.error("set Filed {} false,msg",field.getName(),e.getMessage());
+            log.error("set Filed {} false,msg",field.getName(),e);
             throw  new RuntimeException(e);
         }
     }
