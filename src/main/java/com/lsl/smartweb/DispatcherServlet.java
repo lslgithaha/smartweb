@@ -167,7 +167,7 @@ public class DispatcherServlet extends HttpServlet {
      */
     private HashMap<String, Object> parmDual(HttpServletRequest request) throws IOException {
         HashMap<String, Object> parmap = new HashMap<String, Object>();
-        //装载get参数
+       /* //装载get参数
         String body = Util.decodeURL(Util.getString(request.getInputStream()));
         if (StringUtils.isNotEmpty(body)) {
             String[] params = body.split("&");
@@ -176,10 +176,12 @@ public class DispatcherServlet extends HttpServlet {
                     String[] arr = param.split("=");
                     if (arr != null && arr.length == 2) {
                         parmap.put(arr[0], arr[1]);
+                    }else if(arr != null && arr.length == 1){
+                        parmap.put(arr[0], "");
                     }
                 }
             }
-        }
+        }*/
         Enumeration<String> parameterNames = request.getParameterNames();
 //        Map<String, String[]> parameterMap = request.getParameterMap();
         while (parameterNames.hasMoreElements()) {
@@ -233,7 +235,12 @@ public class DispatcherServlet extends HttpServlet {
                     InputStream in = item.getInputStream();
                     long size = item.getSize();
                     File tmpfile = ((DiskFileItem) item).getStoreLocation();
-                    parmap.put(fileName,new SmartFile(in,item.getName(),fileName,contentType,size,tmpfile));
+                    List<SmartFile> ls = (List<SmartFile>) parmap.get(fileName);
+                    if(ls ==null){
+                        ls = new ArrayList<>();
+                    }
+                    ls.add(new SmartFile(in,item.getName(),fileName,contentType,size,tmpfile));
+                    parmap.put(fileName,ls);
                 }
             }
         } catch (Exception e) {

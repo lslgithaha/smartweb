@@ -15,6 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -95,18 +96,23 @@ public final class BeanFactory {
      * 参数: [method, val, param]
      * 返回: java.util.List<java.lang.Object>
      */
-    public static List<Object> dualMethod(Method method, HashMap<String, Object> val, Param param){
+    public static List<Object> dualMethod(Method method, HashMap<String, Object> val, Param param) throws IOException {
         List<Object> parm = new ArrayList<Object>();
         Class<?>[] parameterTypes = method.getParameterTypes();
-        String[] methodInfo = getMethodInfo(method);
+//        String[] methodInfo = getMethodInfo(method);//javassist
+        String[] methodInfo = ASMUtils.getMethodParamNames(method);
         if(parameterTypes ==null || parameterTypes.length==0){
            return null;
         }
         int index=0;
         for (Class<?> type : parameterTypes) {
             if(type.isArray()){
-                String[] values = ((HttpServletRequest) val.get("request")).getParameterValues(methodInfo[index]);
-                parm.add(values);
+                if(type.isAssignableFrom(SmartFile[].class)){
+                    parm.add(param.getSmarFileArray(methodInfo[index]));
+                }else {
+                    String[] values = ((HttpServletRequest) val.get("request")).getParameterValues(methodInfo[index]);
+                    parm.add(values);
+                }
             }else if (type.equals(ServletContext.class)) {
                 parm.add(val.get("application"));
             } else if (type.equals(HttpSession.class)) {

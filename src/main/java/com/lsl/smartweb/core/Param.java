@@ -2,6 +2,7 @@ package com.lsl.smartweb.core;
 
 import com.lsl.smartweb.fileup.SmartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,5 +82,13 @@ public class Param {
             return null;
         }
         return (SmartFile) o;
+    }
+    public SmartFile[] getSmarFileArray(String s) {
+        Object o = paramMap.get(s);
+        if(null == o){
+            return null;
+        }
+        List<SmartFile> list = (List<SmartFile>) o;
+        return list.toArray(new SmartFile[0]);
     }
 }
