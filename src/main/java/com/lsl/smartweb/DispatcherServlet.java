@@ -234,13 +234,15 @@ public class DispatcherServlet extends HttpServlet {
                     String contentType = item.getContentType();
                     InputStream in = item.getInputStream();
                     long size = item.getSize();
-                    File tmpfile = ((DiskFileItem) item).getStoreLocation();
-                    List<SmartFile> ls = (List<SmartFile>) parmap.get(fileName);
-                    if(ls ==null){
-                        ls = new ArrayList<>();
+                    if(size > 0){
+                        File tmpfile = ((DiskFileItem) item).getStoreLocation();
+                        List<SmartFile> ls = (List<SmartFile>) parmap.get(fileName);
+                        if(ls ==null){
+                            ls = new ArrayList<>();
+                        }
+                        ls.add(new SmartFile(in,item.getName(),fileName,contentType,size,tmpfile));
+                        parmap.put(fileName,ls);
                     }
-                    ls.add(new SmartFile(in,item.getName(),fileName,contentType,size,tmpfile));
-                    parmap.put(fileName,ls);
                 }
             }
         } catch (Exception e) {
