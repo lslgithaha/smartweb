@@ -1,12 +1,16 @@
 package com.lsl.smartweb.view;
 
+import com.lsl.smartweb.utils.StringUtils;
 import com.lsl.smartweb.utils.Util;
+import net.coobird.thumbnailator.Thumbnails;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,6 +23,7 @@ public class ReturnUtls {
     private static final String REDIRECT = "redirect:";
     private static final String FORWARD = "forward:";
     private static final String FILE = "file:";
+    private static final String IMG = "img:";
     private static final Map<String, String> contenMap = new ConcurrentHashMap<>();
 
     public static void dual(Object o, HttpServletResponse response, HttpServletRequest request, String charset) {
@@ -26,7 +31,20 @@ public class ReturnUtls {
         try {
             if (o instanceof String) {
                 String s = (String) o;
-                if (s.startsWith(FILE)) {
+                if (s.startsWith(IMG)) {
+                    String url = s.replaceFirst(IMG, "");
+                    String[] split = url.split(",size=");
+                    if (split.length == 2) {
+                        String[] h = split[1].split(",filename=");
+                        if (h.length == 2) {
+                            imgDual(response, split[0], h[1], h[0]);
+                        } else {
+                            imgDual(response, split[0], "", h[0]);
+                        }
+                    } else {
+                        imgDual(response, split[0], "", "");
+                    }
+                } else if (s.startsWith(FILE)) {
                     String url = s.replaceFirst(FILE, "");
                     String[] split = url.split(",filename=");
                     if (split.length == 1) {
@@ -45,12 +63,43 @@ public class ReturnUtls {
                 }
             } else if (o instanceof SmartInputStrem) {
                 SmartInputStrem sim = (SmartInputStrem) o;
-                inputStremDual(response, sim.getInputStream() ,sim.getFilename());
+                inputStremDual(response, sim.getInputStream(), sim.getFilename());
             } else {
                 jsonDual(response, o);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 方法名: ReturnUtls.imgDual
+     * 作者: LSL
+     * 创建时间: 13:15 2018\7\3 0003
+     * 描述: tupian
+     * 参数: [response, filepath, filename, size]
+     * 返回: void
+     */
+    private static void imgDual(HttpServletResponse response, String filepath, String filename, String size) throws IOException {
+        File file = new File(filepath);
+        String[]  xes = size.split("x");
+        ServletOutputStream outputStream = response.getOutputStream();
+        if (StringUtils.isNotEmpty(filename)) {
+            String s = filename.substring(filename.lastIndexOf("."));
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
+            response.setContentType(contenMap.containsKey(s) ? contenMap.get(s) : "application/octet-stream");
+        }
+        if(!StringUtils.isNotEmpty(size)){
+            Thumbnails.of(filepath).scale(1).toOutputStream(outputStream);
+        }else if (xes.length == 2) {
+            if (file.exists()) {
+                ImgUtils.imgSizetoOut(filepath,size,outputStream);
+
+            } else {
+                textDual(response, "文件丢失:" + filepath);
+            }
+        } else {
+            textDual(response, "尺寸设置有误（正确的例子：200(宽)x300(高)）:" + size);
         }
     }
 
@@ -173,4 +222,5 @@ public class ReturnUtls {
             throw new RuntimeException(e);
         }
     }
+
 }
