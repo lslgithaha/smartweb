@@ -83,16 +83,17 @@ public class ReturnUtls {
     private static void imgDual(HttpServletResponse response, String filepath, String filename, String size) throws IOException {
         File file = new File(filepath);
         String[]  xes = size.split("x");
-        ServletOutputStream outputStream = response.getOutputStream();
         if (StringUtils.isNotEmpty(filename)) {
             String s = filename.substring(filename.lastIndexOf("."));
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
             response.setContentType(contenMap.containsKey(s) ? contenMap.get(s) : "application/octet-stream");
         }
         if(!StringUtils.isNotEmpty(size)){
+            ServletOutputStream outputStream = response.getOutputStream();
             Thumbnails.of(filepath).scale(1).toOutputStream(outputStream);
         }else if (xes.length == 2) {
             if (file.exists()) {
+                ServletOutputStream outputStream = response.getOutputStream();
                 ImgUtils.imgSizetoOut(filepath,size,outputStream);
 
             } else {
