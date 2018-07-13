@@ -23,6 +23,11 @@ public class TransactionProxy implements Proxy {
           return false;
       }
     };
+    private static final ThreadLocal<Integer> SERVICE_NUM = new ThreadLocal<Integer>(){
+        protected Integer initialValue(){
+            return 0;
+        }
+    };
     private static final Pattern pattern = Pattern.compile(SmartConfig.getTransaction());
     @Override
     public Object doProxy(ProxyChain proxyChain) throws Throwable {
@@ -32,6 +37,7 @@ public class TransactionProxy implements Proxy {
         String name = targetMethod.getName();
         Matcher matcher = pattern.matcher(name);
         boolean rs = matcher.matches();
+        SERVICE_NUM.set(SERVICE_NUM.get()+1);
         if(!flag && (targetMethod.isAnnotationPresent(Transaction.class))||rs){
             FLAG_HOLDER.set(true);
             try {
@@ -52,6 +58,9 @@ public class TransactionProxy implements Proxy {
             }
         }else{
             object = proxyChain.doProxyChain();
+        }
+        SERVICE_NUM.set(SERVICE_NUM.get()-1);//方法执行完server层-1
+        if(0 == SERVICE_NUM.get()){//为0标识马上出service层，不需要数据库连接
             DbManage.closeConnection();
         }
         return object;

@@ -102,8 +102,6 @@ public class DbManage {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            closeConnection();
         }
     }
     /**
@@ -122,8 +120,6 @@ public class DbManage {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            closeConnection();
         }
     }
     static void closeAll(){

@@ -2,10 +2,10 @@ package com.lsl.smartweb.db.execsql;
 
 import com.lsl.smartweb.db.DbManage;
 import com.lsl.smartweb.utils.Util;
-import jdk.nashorn.internal.ir.ReturnNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.sql.*;
 import java.util.*;
 
@@ -79,7 +79,8 @@ public class SqlTemple {
      */
     public static <T> T[] queryToArray(String sql, List val, Class<T> type) throws SQLException {
         List<T> list = queryToList(sql, val, type);
-        return (T[]) list.toArray(new Object[0]);
+        Object o = Array.newInstance(type, 0);
+        return list.toArray((T[]) Array.newInstance(type, 0));
     }
     public static <T> T[] queryToArray(String sql, Class<T> type) throws SQLException {
         return queryToArray(sql,null,type);
@@ -205,7 +206,7 @@ public class SqlTemple {
         while (rs.next()) {
             Map<String, Object> rowData = new HashMap();//声明Map
             for (int i = 1; i <= columnCount; i++) {
-                rowData.put(md.getColumnName(i), rs.getObject(i));//获取键名及值
+                rowData.put(md.getColumnLabel(i), rs.getObject(i));//获取键名及值
             }
             list.add(rowData);
         }

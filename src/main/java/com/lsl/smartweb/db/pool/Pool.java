@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Create by LSL on 2018\6\22 0022
@@ -19,6 +20,7 @@ public class Pool {
     int minConnect = 0;
     int connectCount = 0;
     int maxConnect = 0;
+    public static ReentrantLock lock = new ReentrantLock();
     private static final Logger log = LoggerFactory.getLogger(Pool.class);
 
     public Pool(long overtime, int minConnect, int connectCount, int maxConnect) {
@@ -38,6 +40,7 @@ public class Pool {
         return pool;
     }
     Connection get() throws InterruptedException {
+
         synchronized (pool) {
             if (pool.size() == 0) {
                 if (connectCount < maxConnect) {
@@ -45,9 +48,9 @@ public class Pool {
                     return get();
                 } else {
                     long l = System.currentTimeMillis();
-                    pool.wait(overtime);
+                    pool.wait(overtime*1000);
                     if(l+overtime < System.currentTimeMillis()){
-                        log.info("从连接池取链接超时！");
+                        log.error("从连接池取链接超时！");
                         return null;
                     }
                     return get();
@@ -63,7 +66,7 @@ public class Pool {
     void set(Connection connection) {
         synchronized (pool) {
             pool.addLast(connection);
-            pool.notifyAll();
+            pool.notify();
             log.debug("连接池中添加了一个连接，当前总共{}个连接，池里面还有{}个连接", connectCount, pool.size());
         }
     }

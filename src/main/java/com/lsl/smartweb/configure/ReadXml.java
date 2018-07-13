@@ -107,7 +107,7 @@ public class ReadXml {
             String minConnection = database.getChild("minConnection").getText().trim();
             PoolManage.setMinConnect(Integer.valueOf(minConnection));
             String overtime = database.getChild("overtime").getText().trim();
-            PoolManage.setOvertime(Integer.valueOf(overtime) * 1000);
+            PoolManage.setOvertime(Integer.valueOf(overtime));
             String refreshsql = database.getChild("refreshsql").getText();
             PoolManage.setRefreshsql(refreshsql);
             log.info("连接池相关信息->刷新时间（秒）：{},最大连接数：{},最小连接数：{},连接超时（秒）:{},刷新连接用的sql：{}", time, maxConnection, minConnection, overtime, refreshsql);
