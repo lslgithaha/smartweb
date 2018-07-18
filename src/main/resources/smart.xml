@@ -29,7 +29,7 @@
         <!-- smartweb连接池刷新连接选择了执行简单sql，减小连接断开然后重新建立的系统资源开销 -->
         <refreshsql>select version()</refreshsql>
     </database>
-    <!--访问没有的接口返回数据，字符串格式（${requestUrl}代表访问的接口）-->
+    <!--访问不存在的接口返回数据，字符串格式（${requestUrl}代表访问的接口）-->
     <InterfaceNotFound>${requestUrl}未定义</InterfaceNotFound>
     <!--文件上传相关配置-->
     <file_upload>

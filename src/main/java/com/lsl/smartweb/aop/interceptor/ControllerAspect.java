@@ -37,4 +37,8 @@ public class ControllerAspect extends AspectProxy {
         log.debug("time:{}",System.currentTimeMillis()-begin);
     }
 
+    @Override
+    public boolean needIntercept(Class<?> cls, Method method, Object[] params) throws Throwable {
+        return true;
+    }
 }

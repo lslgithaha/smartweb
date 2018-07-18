@@ -13,7 +13,7 @@ public interface ExceptionHandler {
          * 参数: [request, response, parm, exception]
          * 返回: 跳转的页面
          */
-        String resolveException_Json(HttpServletRequest request,
+        Object resolveException_Json(HttpServletRequest request,
                                      HttpServletResponse response,
                                      HashMap<String, Object> parm,
                                      Exception exception);
