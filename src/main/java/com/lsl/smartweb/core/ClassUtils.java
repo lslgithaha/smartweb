@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -72,35 +73,55 @@ public class ClassUtils {
                         String path = url.getPath().replaceAll("%20", " ")+packageName.replace(".","/");
                         addClass(clsSet,path,packageName);
                     }else if(protocol.equals(JAR)){
-                        JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
-                        if(jarURLConnection != null){
-                            JarFile jarFile = jarURLConnection.getJarFile();
-                            if(jarFile != null){
-                                Enumeration<JarEntry> entries = jarFile.entries();
-                                while (entries.hasMoreElements()){
-                                    JarEntry jarEntry = entries.nextElement();
-                                    String name = jarEntry.getName();
-                                    if(name.endsWith(".class")){
-                                        String s = name.substring(0, name.lastIndexOf(".")).replaceAll("/", ".");
-                                        if(SmartConfig.getJatInitBase(s))
-                                        clsSet.add(loadClass(s,false));
-                                    }else if(name.endsWith("FileContentType.txt")){
-                                        InputStream inputStream = jarFile.getInputStream(jarEntry);
-                                        ReturnUtls.init(inputStream);
-                                    }
-                                }
-                            }
-                        }
-
+                        dealJarReaource(url,clsSet);
                     }
                 }
-
+            }
+            //兼容tomcat7及其以下
+            if(!clsSet.contains(loadClass("com.lsl.smartweb.core.BeanHelper",false))){
+                log.debug("检测到使用tomcat8以下的服务器容器！");
+                String path = new File(ClassUtils.class.getClassLoader().getResource("").getPath()).getParent()+File.separator+"lib";
+                File[] list = new File(path).listFiles(file -> file.getName().startsWith("smartweb"));
+                for (File file : list) {
+                    String s = "jar: file:/" + file.getAbsolutePath().replaceAll("\\\\","/")+"!/";
+                    ClassUtils.dealJarReaource(new URL(s),clsSet);
+                }
             }
         } catch (Exception e) {
             log.error("load class false,msg:"+e.getMessage());
             throw new RuntimeException(e);
         }
         return clsSet;
+    }
+
+    /**
+     * 方法名: ClassUtils.dealJarReaource
+     * 作者: LSL
+     * 创建时间: 14:07 2018\7\18 0018
+     * 描述:
+     * 参数: [url, clsSet]
+     * 返回: void
+     */
+    protected static void dealJarReaource(URL url, Set<Class<?>> clsSet) throws IOException {
+        JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
+        if(jarURLConnection != null){
+            JarFile jarFile = jarURLConnection.getJarFile();
+            if(jarFile != null){
+                Enumeration<JarEntry> entries = jarFile.entries();
+                while (entries.hasMoreElements()){
+                    JarEntry jarEntry = entries.nextElement();
+                    String name = jarEntry.getName();
+                    if(name.endsWith(".class")){
+                        String s = name.substring(0, name.lastIndexOf(".")).replaceAll("/", ".");
+                        if(SmartConfig.getJatInitBase(s))
+                            clsSet.add(loadClass(s,false));
+                    }else if(name.endsWith("FileContentType.txt")){
+                        InputStream inputStream = jarFile.getInputStream(jarEntry);
+                        ReturnUtls.init(inputStream);
+                    }
+                }
+            }
+        }
     }
 
     /**
