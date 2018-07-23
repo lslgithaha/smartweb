@@ -81,7 +81,7 @@ public class ClassUtils {
             if(!clsSet.contains(loadClass("com.lsl.smartweb.core.BeanHelper",false))){
                 log.debug("检测到使用tomcat8以下的服务器容器！");
                 String path = new File(ClassUtils.class.getClassLoader().getResource("").getPath()).getParent()+File.separator+"lib";
-                File[] list = new File(path).listFiles(file -> file.getName().startsWith("smartweb"));
+                File[] list = new File(path).listFiles();
                 for (File file : list) {
                     String s = "jar: file:/" + file.getAbsolutePath().replaceAll("\\\\","/")+"!/";
                     ClassUtils.dealJarReaource(new URL(s),clsSet);
