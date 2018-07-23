@@ -12,7 +12,6 @@ import com.lsl.smartweb.fileup.UpStatus;
 import com.lsl.smartweb.fileup.UploadProcessListener;
 import com.lsl.smartweb.utils.ArrayUtils;
 import com.lsl.smartweb.utils.StringUtils;
-import com.lsl.smartweb.utils.Util;
 import com.lsl.smartweb.view.ReturnUtls;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -151,7 +150,7 @@ public class DispatcherServlet extends HttpServlet {
                 }
             }
         } else {
-            o = SmartConfig.getInterfaceNotFond().replace("${requestUrl}", request.getRequestURI());
+            o = exceptionHandler.resolveException_Method_not_define(handler);
         }
         //返回值处理
         returnDual(o, response, request);

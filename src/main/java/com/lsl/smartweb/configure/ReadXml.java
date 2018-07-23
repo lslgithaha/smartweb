@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Create by LSL on 2018\6\19 0019
@@ -42,7 +40,6 @@ public class ReadXml {
             resourceInit(rootElement);
             exceptionInit(rootElement);
             databaseInit(rootElement);
-            interfaceNotFoundInit(rootElement);
             uploadInit(rootElement);
             jarNeedLoadBasePacsge(rootElement);
             transactionInit(rootElement);
@@ -114,19 +111,6 @@ public class ReadXml {
         }
     }
 
-    /**
-     * 方法名: ReadXml.interfaceNotFoundInit
-     * 作者: LSL
-     * 创建时间: 10:00 2018\6\27 0027
-     * 描述: 接口未找到提示信息
-     * 参数: [rootElement]
-     * 返回: void
-     */
-    public static void interfaceNotFoundInit(Element rootElement) {
-        String InterfaceNotFound = rootElement.getChild("InterfaceNotFound").getText().trim();
-        SmartConfig.setInterfaceNotFond(InterfaceNotFound);
-        log.debug("接口找不到返回信息：{}", InterfaceNotFound);
-    }
 
     /**
      * 方法名: ReadXml.uploadInit

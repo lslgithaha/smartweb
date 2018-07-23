@@ -32,8 +32,6 @@
         <!-- smartweb连接池刷新连接选择了执行简单sql，减小连接断开然后重新建立的系统资源开销 -->
         <refreshsql>select version()</refreshsql>
     </database>
-    <!--访问不存在的接口返回数据，字符串格式（${requestUrl}代表访问的接口）-->
-    <InterfaceNotFound>${requestUrl}未定义</InterfaceNotFound>
     <!--文件上传相关配置-->
     <file_upload>
         <!--文件大小超过多少开始使用磁盘缓存(b)-->
@@ -67,7 +65,7 @@
 
 ####开发说明
 ######1.开发统一异常处理类
-	实现接口ExceptionHandler，resolveException_Json（）处理json类请求异常，resolveException_View处理页面跳转的求情异常
+	实现接口ExceptionHandler，resolveException_Json（）处理json类请求异常，resolveException_View处理页面跳转的求情异常,处理接口未找到resolveException_Method_not_define()
 ######2.数据库操作
 	smartweb已实现简单的数据库执行详见SqlTemple类
 ######3.开发切面代理类

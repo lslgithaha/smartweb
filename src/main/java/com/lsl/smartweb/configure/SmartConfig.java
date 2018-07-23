@@ -11,7 +11,6 @@ public class SmartConfig {
     private static String[] resource;
     private static String[] jatInitBase;
     private static String exception;
-    private static String interfaceNotFond;
     private static String upload_tempdir;
     private static int upload_filemaxsize;
     private static int upload_maxsize;
@@ -88,16 +87,6 @@ public class SmartConfig {
     public static void setUpload_usecachesize(int upload_usecachesize) {
         SmartConfig.upload_usecachesize = upload_usecachesize;
     }
-
-
-    public static String getInterfaceNotFond() {
-        return interfaceNotFond;
-    }
-
-    public static void setInterfaceNotFond(String interfaceNotFond) {
-        SmartConfig.interfaceNotFond = interfaceNotFond;
-    }
-
 
     public static String getException() {
         return exception;
