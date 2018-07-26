@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="smartweb:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/smartweb_jar</output-path>
+    <root id="archive" name="smartweb.jar">
+      <element id="module-output" name="smartweb" />
+    </root>
+  </artifact>
+</component>
