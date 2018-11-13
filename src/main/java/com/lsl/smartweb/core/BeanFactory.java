@@ -171,6 +171,7 @@ public final class BeanFactory {
             }else{
                 result = method.invoke(o, list.toArray());
             }
+            log.debug("返回结果:{}",result);
         } catch (Exception e) {
             log.error("invoke method {} false,msg:",method.getName(),e);
             throw e;

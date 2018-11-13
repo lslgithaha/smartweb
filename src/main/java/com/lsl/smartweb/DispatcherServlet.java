@@ -38,7 +38,7 @@ import java.util.*;
 @WebServlet(urlPatterns = "/", loadOnStartup = 10)
 public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
-    private final static String charset="utf-8";
+    private final static String charset = "utf-8";
     private ExceptionHandler exceptionHandler;
     private DiskFileItemFactory fac;
 
@@ -75,13 +75,13 @@ public class DispatcherServlet extends HttpServlet {
         //文件上传工厂处理
         fac = new DiskFileItemFactory();//1.创建文件上传工厂类
         fac.setSizeThreshold(SmartConfig.getUpload_usecachesize());//超过多少大小使用磁盘缓存
-        if(StringUtils.isNotEmpty(SmartConfig.getUpload_tempdir())){
+        if (StringUtils.isNotEmpty(SmartConfig.getUpload_tempdir())) {
             fac.setRepository(new File(SmartConfig.getUpload_tempdir()));
         }
 
         log.debug("文件上传工厂初始化完成");
         //文件上传进度servlet初始化
-        ControllerHelper.changeHandler(new Request("get","/fileupload_process"),new Request("get",SmartConfig.getProgress()) );
+        ControllerHelper.changeHandler(new Request("get", "/fileupload_process"), new Request("get", SmartConfig.getProgress()));
         log.debug("进度信息Controller初始化完成");
         if (StringUtils.isNotEmpty(SmartConfig.getException())) {
             log.debug("初始化异常处理类：{}", SmartConfig.getException());
@@ -103,7 +103,7 @@ public class DispatcherServlet extends HttpServlet {
      * 返回: void
      */
     @Override
-    public void service(ServletRequest req, ServletResponse res){
+    public void service(ServletRequest req, ServletResponse res) {
         Object o = null;
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
@@ -124,10 +124,10 @@ public class DispatcherServlet extends HttpServlet {
             HashMap<String, Object> parmap = null;
             Param param;
             try {
-                if(ServletFileUpload.isMultipartContent(request)){//文件表单
+                if (ServletFileUpload.isMultipartContent(request)) {//文件表单
                     parmap = dualFile(request);
                     param = new Param(parmap);
-                }else{//参数处理
+                } else {//参数处理
                     parmap = parmDual(request);
                     param = new Param(parmap);
                 }
@@ -136,8 +136,10 @@ public class DispatcherServlet extends HttpServlet {
                 Object bean = BeanHelper.getBean(controller);//获得对像实例
                 o = BeanFactory.invokeMethod(bean, method, val, param);//调用业务
             } catch (Exception e) {
+//                o = e;
+                log.error("发生异常：", e);
                 if (exceptionHandler == null) {
-                    o = e;
+                    throw new RuntimeException(e);
                 } else {
                     if (!(request.getHeader("accept").indexOf("application/json") > -1 || (request
                             .getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With").indexOf("XMLHttpRequest") > -1))) {
@@ -150,7 +152,11 @@ public class DispatcherServlet extends HttpServlet {
                 }
             }
         } else {
-            o = exceptionHandler.resolveException_Method_not_define(handler);
+            if(exceptionHandler!=null){
+                o = exceptionHandler.resolveException_Method_not_define(handler);
+            }else {
+                log.error("handler未找到：RequestMethod({}),RequestPath({})", requestMethod, requestPath);
+            }
         }
         //返回值处理
         returnDual(o, response, request);
@@ -199,11 +205,12 @@ public class DispatcherServlet extends HttpServlet {
      * 参数: [o, response, request]
      * 返回: void
      */
-    private void returnDual(Object o, HttpServletResponse response, HttpServletRequest request){
+    private void returnDual(Object o, HttpServletResponse response, HttpServletRequest request) {
         if (null != o) {
-            ReturnUtls.dual(o, response, request,charset);
+            ReturnUtls.dual(o, response, request, charset);
         }
     }
+
     /**
      * 方法名: DispatcherServlet.dualFile
      * 作者: LSL
@@ -219,34 +226,34 @@ public class DispatcherServlet extends HttpServlet {
         upload.setFileSizeMax(SmartConfig.getUpload_filemaxsize());//单个文件大小
         upload.setSizeMax(SmartConfig.getUpload_maxsize()); //总文件大小
         upload.setHeaderEncoding(charset);
-        upload.setProgressListener(new UploadProcessListener(upStatus,request.getSession().getId()));
+        upload.setProgressListener(new UploadProcessListener(upStatus, request.getSession().getId()));
         try {
-            List<FileItem>  items = upload.parseRequest(request);// 1. 得到 FileItem 的集合 items
+            List<FileItem> items = upload.parseRequest(request);// 1. 得到 FileItem 的集合 items
             upStatus.setFilenums(items.size());
             for (FileItem item : items) {// 2. 遍历 items:
                 if (item.isFormField()) {// 若是一个一般的表单域, 打印信息
                     String name = item.getFieldName();
                     String value = item.getString(charset);
-                    parmap.put(name,value);
-                }else {// 若是文件域则把文件保存到 e:\\files 目录下.
+                    parmap.put(name, value);
+                } else {// 若是文件域则把文件保存到 e:\\files 目录下.
                     String fileName = item.getFieldName();
                     String contentType = item.getContentType();
                     InputStream in = item.getInputStream();
                     long size = item.getSize();
-                    if(size > 0){
+                    if (size > 0) {
                         File tmpfile = ((DiskFileItem) item).getStoreLocation();
                         List<SmartFile> ls = (List<SmartFile>) parmap.get(fileName);
-                        if(ls ==null){
+                        if (ls == null) {
                             ls = new ArrayList<>();
                         }
-                        ls.add(new SmartFile(in,item.getName(),fileName,contentType,size,tmpfile));
-                        parmap.put(fileName,ls);
+                        ls.add(new SmartFile(in, item.getName(), fileName, contentType, size, tmpfile));
+                        parmap.put(fileName, ls);
                     }
                 }
             }
         } catch (Exception e) {
 //            e.printStackTrace();
-            log.error("处理文件表单出现错误：",e);
+            log.error("处理文件表单出现错误：", e);
             throw e;
         }
         return parmap;

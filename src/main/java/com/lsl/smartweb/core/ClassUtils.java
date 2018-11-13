@@ -82,13 +82,16 @@ public class ClassUtils {
                 log.debug("检测到使用tomcat8以下的服务器容器！");
                 String path = new File(ClassUtils.class.getClassLoader().getResource("").getPath()).getParent()+File.separator+"lib";
                 File[] list = new File(path).listFiles();
+                log.debug(path+" find file: "+list.length);
                 for (File file : list) {
                     String s = "jar: file:/" + file.getAbsolutePath().replaceAll("\\\\","/")+"!/";
+                    log.debug("jar_path:"+s);
+                    s = s.replaceAll("//","/");
                     ClassUtils.dealJarReaource(new URL(s),clsSet);
                 }
             }
         } catch (Exception e) {
-            log.error("load class false,msg:"+e.getMessage());
+            log.error("load class false,msg:",e);
             throw new RuntimeException(e);
         }
         return clsSet;

@@ -29,6 +29,7 @@ public class ControllerAspect extends AspectProxy {
     @Override
     public void before(Class<?> cls, Method method, Object[] params) throws Throwable {
         log.debug("class:{} , method:{} ",cls.getName(),method.getName());
+        log.debug("参数：",params);
         begin = System.currentTimeMillis();
     }
 
