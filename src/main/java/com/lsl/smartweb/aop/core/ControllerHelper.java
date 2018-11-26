@@ -3,6 +3,7 @@ package com.lsl.smartweb.aop.core;
 
 import com.lsl.smartweb.annotion.Controller;
 import com.lsl.smartweb.annotion.GET;
+import com.lsl.smartweb.annotion.OPTIONS;
 import com.lsl.smartweb.annotion.POST;
 import com.lsl.smartweb.core.ClassHelper;
 import org.slf4j.Logger;
@@ -58,6 +59,16 @@ public final class ControllerHelper {
                                 Handler handler = new Handler(aClass, method);
                                 ACTION_MAP.put(request, handler);
                                 log.debug("[post,\"{}\"] bound to {}.{}()", url, aClass.getName(), method.getName());
+                            }
+                        }else if(method.isAnnotationPresent(OPTIONS.class)){
+                            OPTIONS options = method.getAnnotation(OPTIONS.class);
+                            String mapping = options.value();
+                            String url = urlDual(path, mapping);
+                            if (url.matches("^[/[\\w]+]+[/]?")) {
+                                Request request = new Request("options", url);
+                                Handler handler = new Handler(aClass, method);
+                                ACTION_MAP.put(request, handler);
+                                log.debug("[options,\"{}\"] bound to {}.{}()", url, aClass.getName(), method.getName());
                             }
                         }
                     }
